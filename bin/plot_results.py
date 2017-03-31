@@ -26,14 +26,3 @@ sns.despine(left=True)
 sns.distplot(actions_vector, kde=False, color="b", bins=[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10], norm_hist=True)
 
 plt.show()
-
-
-# dir_prob = '/Users/eliasfernandez/PycharmProjects/PyBevo/results/' \
-#            '03-03-17_14:02:40_AnticipationGame_reactive_paper_aspiration.npy'
-#
-# aspiration = np.load(dir_prob)
-# print(aspiration.shape)
-# plt.plot(aspiration[0, :])
-# plt.show()
-# plt.legend(loc='upper right')
-# # plt.savefig(save_dir)

@@ -18,7 +18,6 @@ lib
 lib64
 data
 results
-bin
 
 # Installer logs
 pip-log.txt
