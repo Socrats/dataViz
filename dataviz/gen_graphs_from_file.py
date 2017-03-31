@@ -10,10 +10,10 @@ from sympy.abc import x
 import os
 
 
-save_dir = os.path.normpath('C:\Users\Elías\OneDrive\Documentos\AGH')
-files = [os.path.normpath('C:\Users\Elías\OneDrive\Documentos\AGH\emas_grid_10_70.txt'),
-         os.path.normpath('C:\Users\Elías\OneDrive\Documentos\AGH\emas_migration_10_70.txt')]
-save_dir_time = os.path.normpath('C:/Users/Elías/Documents/AGH/pyage-test/Files-paper/final_graphs/technical')
+save_dir = os.path.normpath('')
+files = [os.path.normpath(''),
+         os.path.normpath('')]
+save_dir_time = os.path.normpath('')
 GRAPH_COMBINATIONS = [['count', 'reproductions'], ['count', 'algae'], ['algae', 'reproductions'], 'count', 'algae',
                       'reproductions']
 ALGAE_PROB = [0.1, 0.5, 0.9]
@@ -44,7 +44,7 @@ def process(graph_type, ax):
         x = []
         y = []
         std = []
-        graph_file = os.path.normpath('C:/Users/Elías/Documents/AGH/pyage-test/results/2D/scenario3/' +
+        graph_file = os.path.normpath('' +
                                       graph_type + '/forams_population_5000_algae_limit_5000/energy_need_0.5/'
                                                    'TEST_RESULTS_FORAMS_' + graph_type + '_100_algae_prob_' +
                                       str(algae_prob) + '.txt')
