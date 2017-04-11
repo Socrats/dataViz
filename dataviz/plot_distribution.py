@@ -51,28 +51,35 @@ def file2dataframe(root_dir: str, expression: str, offset: int) -> pd.DataFrame:
     return pd.DataFrame(data_dict)
 
 
-def calculate_hist(data: np.ndarray) -> (np.ndarray, np.ndarray):
+def calculate_hist(data: np.ndarray, density=False) -> (np.ndarray, np.ndarray):
     hist_data = []
     for i in range(len(data)):
-        hist_data.append(np.histogram(data[i], bins=paths.bins, density=True)[0])
+        hist_data.append(np.histogram(data[i], bins=paths.bins, density=density)[0])
     means = np.mean(hist_data, axis=0)
     errors = np.std(hist_data, axis=0)
     return means, errors
 
 
-def plot_hist_with_errors(means: np.ndarray, errors: np.ndarray, index: list):
-    means_df = pd.DataFrame(means, index=pd.Index(index))
-    errors_df = pd.DataFrame(errors, index=index)
+def plot_hist_with_errors(means: np.ndarray, errors: np.ndarray, index: list, column: list):
+    means_df = pd.DataFrame(means, columns=column)
+    errors_df = pd.DataFrame(errors, columns=column)
     fig, ax = plt.subplots()
     means_df.plot(yerr=errors_df, ax=ax, kind='bar')
-    plt.show()
+    plt.savefig(''.join([paths.save_path, column[0], '_actions_hist.svg']))
 
 
-def hist_by_tag(data: pd.DataFrame, tag: str, index: list):
-    means, errors = calculate_hist(data.eval(tag))
-    plot_hist_with_errors(means, errors, index)
+def hist_by_tag(data: pd.DataFrame, tag: str, index: list, density=False):
+    means, errors = calculate_hist(data.eval(tag), density=density)
+    plot_hist_with_errors(means, errors, index, [tag])
 
 # data = file2dataframe(paths.root_dir, "actions", 1000)
 # gp3 = data.groupby(by=('f1', 'f2', 'f5', 'f6', 'f7', 'f8', 'f9', 'f10'))
 # print(data)
 # print(gp3.mean())
+
+if __name__ == "__main__":
+    idx = [i for i in range(0, 11)]
+    data = file2dataframe(paths.root_dir, "actions", 1000)
+    for el in paths.prefixes:
+        if el == 2: continue
+        hist_by_tag(data, ''.join(['f', str(el)]), idx, True)
