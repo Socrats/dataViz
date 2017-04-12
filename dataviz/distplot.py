@@ -2,12 +2,13 @@
 
 import numpy as np
 import pandas as pd
-from pandas.tools.plotting import bootstrap_plot
+# from pandas.tools.plotting import bootstrap_plot
 import matplotlib.pyplot as plt
-from bin import paths
-import bin.utils as utils
+import dataviz.utils as utils
 import matplotlib
+
 matplotlib.style.use('ggplot')
+
 
 # data_dict = {}
 # for index, payoff_file in zip(paths.prefixes, paths.payoff_files):
@@ -30,11 +31,6 @@ matplotlib.style.use('ggplot')
 # plt.show()
 
 
-def plot_distribution() -> dict:
-    files = utils.get_files(paths.root_dir, "actions")
-    return files
-
-
 def file2dataframe(root_dir: str, expression: str, offset: int) -> pd.DataFrame:
     files = utils.get_files(root_dir, expression)
     data_dict = {}
@@ -51,35 +47,28 @@ def file2dataframe(root_dir: str, expression: str, offset: int) -> pd.DataFrame:
     return pd.DataFrame(data_dict)
 
 
-def calculate_hist(data: np.ndarray, density=False) -> (np.ndarray, np.ndarray):
+def calculate_hist(data: np.ndarray, bins: list, density=False) -> (np.ndarray, np.ndarray):
     hist_data = []
     for i in range(len(data)):
-        hist_data.append(np.histogram(data[i], bins=paths.bins, density=density)[0])
+        hist_data.append(np.histogram(data[i], bins=bins, density=density)[0])
     means = np.mean(hist_data, axis=0)
     errors = np.std(hist_data, axis=0)
     return means, errors
 
 
-def plot_hist_with_errors(means: np.ndarray, errors: np.ndarray, index: list, column: list):
+def plot_hist_with_errors(means: np.ndarray, errors: np.ndarray, index: list, column: list, save_path: str):
     means_df = pd.DataFrame(means, columns=column)
     errors_df = pd.DataFrame(errors, columns=column)
     fig, ax = plt.subplots()
     means_df.plot(yerr=errors_df, ax=ax, kind='bar')
-    plt.savefig(''.join([paths.save_path, column[0], '_actions_hist.svg']))
+    plt.savefig(''.join([save_path, column[0], '_actions_hist.svg']))
 
 
-def hist_by_tag(data: pd.DataFrame, tag: str, index: list, density=False):
-    means, errors = calculate_hist(data.eval(tag), density=density)
-    plot_hist_with_errors(means, errors, index, [tag])
+def hist_by_tag(data: pd.DataFrame, tag: str, index: list, bins: list, save_path: str, density=False):
+    means, errors = calculate_hist(data.eval(tag), bins, density=density)
+    plot_hist_with_errors(means, errors, index, [tag], save_path)
 
-# data = file2dataframe(paths.root_dir, "actions", 1000)
-# gp3 = data.groupby(by=('f1', 'f2', 'f5', 'f6', 'f7', 'f8', 'f9', 'f10'))
-# print(data)
-# print(gp3.mean())
 
-if __name__ == "__main__":
-    idx = [i for i in range(0, 11)]
-    data = file2dataframe(paths.root_dir, "actions", 1000)
-    for el in paths.prefixes:
-        if el == 2: continue
-        hist_by_tag(data, ''.join(['f', str(el)]), idx, True)
+def calculate_avg_behavior(data: np.ndarray) -> (np.ndarray, np.ndarray):
+    means = np.mean(data, axis=0)
+    errors = np.std(data, axis=0)
