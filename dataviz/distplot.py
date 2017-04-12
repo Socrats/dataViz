@@ -10,29 +10,12 @@ import matplotlib
 matplotlib.style.use('ggplot')
 
 
-# data_dict = {}
-# for index, payoff_file in zip(paths.prefixes, paths.payoff_files):
-#     actions_vector = np.load(payoff_file)
-#     actions_vector = actions_vector[0][-1000:]
-#     data_dict[''.join(['f', str(index)])] = actions_vector
-#
-# actions_df = pd.DataFrame(data_dict)
-# actions_df = actions_df[['f1', 'f2', 'f5', 'f6', 'f7', 'f8', 'f9', 'f10', 'f11', 'f12', 'f13', 'f14', 'f15', 'f20']]
-# # print(actions_df)
-#
-# actions_df.plot.hist(stacked=True, bins=paths.bins)
-# actions_df.diff().hist(color='k', alpha=0.5, bins=paths.bins)
-# plt.axhline(0, color='k')
-# plt.show()
-
-# actions_files = utils.get_files(paths.root_dir, "actions")
-# data = pd.DataFrame(np.load(actions_files['f9'][1])[-1000:].transpose())
-# bootstrap_plot(data, size=50, samples=500, color='grey')
-# plt.show()
-
-
-def file2dataframe(root_dir: str, expression: str, offset: int) -> pd.DataFrame:
-    files = utils.get_files(root_dir, expression)
+def file2dataframe(root_dir: str, expression: str, offset: int, sort_columns: dict) -> pd.DataFrame:
+    """
+    gets data with and :offset from files at :root_dir that follow the pattern 
+    :expression and :returns a pandas.DataFrame with the data
+    """
+    files = utils.get_files(root_dir, expression, [key for key, values in sort_columns.items()])
     data_dict = {}
     for key, values in files.items():
         i = 0
@@ -44,7 +27,7 @@ def file2dataframe(root_dir: str, expression: str, offset: int) -> pd.DataFrame:
 
     # idx = pd.Index([i for i in range(0, offset)])
 
-    return pd.DataFrame(data_dict)
+    return pd.DataFrame(pd.DataFrame(data_dict), columns=sorted(sort_columns, key=sort_columns.get))
 
 
 def calculate_hist(data: np.ndarray, bins: list, density=False) -> (np.ndarray, np.ndarray):
@@ -69,6 +52,5 @@ def hist_by_tag(data: pd.DataFrame, tag: str, index: list, bins: list, save_path
     plot_hist_with_errors(means, errors, index, [tag], save_path)
 
 
-def calculate_avg_behavior(data: np.ndarray) -> (np.ndarray, np.ndarray):
-    means = np.mean(data, axis=0)
-    errors = np.std(data, axis=0)
+def calculate_avg_behavior(data: pd.DataFrame, collumns: list):
+    pass
