@@ -52,5 +52,23 @@ def hist_by_tag(data: pd.DataFrame, tag: str, index: list, bins: list, save_path
     plot_hist_with_errors(means, errors, index, [tag], save_path)
 
 
-def calculate_avg_behavior(data: pd.DataFrame, collumns: list):
-    pass
+def calculate_avg_behavior(data: pd.DataFrame) -> (pd.DataFrame, pd.DataFrame):
+    means_dict = {}
+    errors_dict = {}
+    for column in data.columns:
+        means_dict[column] = []
+        errors_dict[column] = []
+        for row in data[column]:
+            means_dict[column].append(np.mean(row))
+            errors_dict[column].append(np.std(row))
+
+    return pd.DataFrame(means_dict, columns=data.columns), pd.DataFrame(errors_dict, columns=data.columns)
+
+
+def beautiful_box_plot(df: pd.DataFrame, save_path: str):
+    color = dict(boxes='DarkGreen', whiskers='DarkOrange',
+                 medians='DarkBlue', caps='Gray')
+
+    ax = df.plot.box(color=color, sym='r+')
+    fig = ax.get_figure()
+    fig.savefig(''.join([save_path, 'boxplot_actions_avg_behavior.svg']))
