@@ -11,11 +11,17 @@ def search_path(root_dir: str, expression: str) -> list:
     return files
 
 
-def get_files(root_dir: str, expression: str, folders: list) -> dict:
+def get_files(root_dir: str, expression: str, folders: list or str, size: int) -> dict:
+    # TODO: change this so that it accepts the value
     files = {}
-    for folder in folders:
-        files[folder] = \
-            glob.glob(''.join([root_dir, ''.join(['/', folder, '/data/*', expression, '-4999*'])]))
+    if type(folders) is list:
+        for folder in folders:
+            files[folder] = \
+                glob.glob("{root_dir}{folder}/data/*{expression}-{size}*".format(root_dir=root_dir, folder=folder,
+                                                                                 expression=expression, size=size))
+    else:
+        files[folders] = \
+            glob.glob(''.join([root_dir, ''.join(['/data/*', expression, '-9999*'])]))
     return files
 
 

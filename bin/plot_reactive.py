@@ -23,11 +23,8 @@ import bin.paths as paths
 
 
 if __name__ == "__main__":
-    idx = [i for i in range(0, 11)]
-    sort_dict = {'f1': 0, 'f2': 1, 'f5': 3, 'f6': 4, 'f7': 5, 'f8': 6, 'f9': 7, 'f10': 8, 'f11': 9, 'f12': 10,
-                 'f13': 11, 'f14': 12, 'f15': 13, 'f20': 14}
-    data = distplot.files2dataframe(paths.root_dir, "actions", 1000, sort_dict)
-    for el in paths.prefixes:
-        if el == 2:
-            continue
-        distplot.hist_by_tag(data, ''.join(['f', str(el)]), idx, paths.bins, paths.save_path, density=True)
+    sort_dict = "reactive"
+    data = distplot.file2dataframe(paths.root_dir, "actions", 1000, sort_dict)
+    # distplot.hist_by_tag(data, sort_dict, idx, paths.bins, paths.save_path, density=True)
+    means, errors = distplot.calculate_avg_behavior(data)
+    distplot.beautiful_box_plot(means, paths.save_path)
