@@ -36,4 +36,4 @@ def multi_poly_fit(x_time, y, ax, type_name):
 
     expr = round(coefficients[0], 15) * x ** 2 + round(coefficients[1], 5) * x + round(coefficients[2], 5)
     show = latex(expr)
-    ax.plot(xs, ys, label=r'$Polynomial fit$' + '\n' + r'$y = ' + show + r'$', color='b')
+    ax.plot(xs, ys, label=r'$Polynomial fit$\n$y = {}$'.format(show), color='b')
